@@ -317,12 +317,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.twilio.com/2010-04-01/Accounts/AC74f060a547cc72b0683ba2747e8cbead/Messages.json",
+        "url": "{{ TWILIO_URL }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendBody": true,
         "contentType": "form-urlencoded",
         "bodyParameters": {
+
           "parameters": [
             {
               "name": "To",
@@ -381,7 +382,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.twilio.com/2010-04-01/Accounts/AC74f060a547cc72b0683ba2747e8cbead/Messages.json",
+        "url": "{{ TWILIO_URL }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendBody": true,
@@ -488,7 +489,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.twilio.com/2010-04-01/Accounts/AC74f060a547cc72b0683ba2747e8cbead/Messages.json",
+        "url": "{{ TWILIO_URL }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendBody": true,
@@ -609,7 +610,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.twilio.com/2010-04-01/Accounts/AC74f060a547cc72b0683ba2747e8cbead/Messages.json",
+        "url": "{{ TWILIO_URL }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendBody": true,
@@ -666,7 +667,7 @@
             "cf-visitor": "{\"scheme\":\"https\"}",
             "cf-worker": "n8n.cloud",
             "content-type": "application/x-www-form-urlencoded",
-            "i-twilio-idempotency-token": "809de1c4-2ad9-4ba4-8fba-0cee755d38db",
+            "i-twilio-idempotency-token": "{{ $now.toMillis() }}",
             "x-forwarded-for": "50.19.198.176, 172.70.38.30",
             "x-forwarded-host": "bhanuprakash2407.app.n8n.cloud",
             "x-forwarded-port": "443",
@@ -675,7 +676,7 @@
             "x-home-region": "us1",
             "x-is-trusted": "yes",
             "x-real-ip": "50.19.198.176",
-            "x-twilio-signature": "KBBLMeKdFZa1IWXCBps+DJwD7ZQ="
+            "x-twilio-signature": "{{ $env.YOUR_ENV_VAR }}"
           },
           "params": {},
           "query": {},
@@ -692,7 +693,7 @@
             "NumSegments": "1",
             "ReferralNumMedia": "0",
             "MessageSid": "SM46c444b1490be03cca37cf3517d0d82a",
-            "AccountSid": "AC74f060a547cc72b0683ba2747e8cbead",
+            "AccountSid": "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
             "ChannelMetadata": "{\"type\":\"whatsapp\",\"data\":{\"context\":{\"ProfileName\":\"Bhanu Prakash\",\"WaId\":\"918317659791\"}}}",
             "From": "whatsapp:+918317659791",
             "ApiVersion": "2010-04-01"
