@@ -1,0 +1,960 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -352,
+        32
+      ],
+      "id": "df8405bd-abe4-405b-870a-dddb7526738d",
+      "name": "Webhook",
+      "webhookId": "af0bb1d0-18f4-4bd6-9c95-ff436e8e251b"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json[\"command\"]}}",
+                    "rightValue": "=LIST",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e503c8d4-9104-4d1a-bc6b-8cb5a9790a78"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "List Files"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "50a737b0-32cb-4b79-90e2-368a8353cd35",
+                    "leftValue": "={{$json[\"command\"]}}",
+                    "rightValue": "DELETE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Delete files"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "35c5fbe5-2620-40c6-8aee-b251ba0cd166",
+                    "leftValue": "={{$json[\"command\"]}}",
+                    "rightValue": "MOVE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Move Files"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8a64f20b-2dd8-4809-892e-d48423b9d30e",
+                    "leftValue": "={{$json[\"command\"]}}",
+                    "rightValue": "SUMMARY",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "File Summary"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "9b283507-ac6c-469c-85e7-08dff0cad916",
+      "name": "Switch",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "operation": "deleteFile",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json[\"id\"]}}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        -112
+      ],
+      "id": "ce10f1b5-d12f-4ecb-9a1a-dc88ddf43f1d",
+      "name": "Delete a file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COVGt86PmhQnNecs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json[\"fileId\"]}}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{$json[\"folderId\"]}}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1680,
+        48
+      ],
+      "id": "fd52d474-7a66-4b71-a26c-35a01f78d9d8",
+      "name": "Move file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COVGt86PmhQnNecs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json[\"id\"]}}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1184,
+        240
+      ],
+      "id": "aca99dfb-8241-4fa3-8036-df1c176b5924",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COVGt86PmhQnNecs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Summarize the following content from a PDF file:\n\n{{$json[\"data\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2272,
+        272
+      ],
+      "id": "10c1278b-5698-4143-9cd8-21a8a0503844",
+      "name": "Message a model",
+      "alwaysOutputData": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "6OgVu3EWfAym3KhT",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $json.body.Body?.trim() || \"\";\n\nif (!input) {\n  return [{\n    json: {\n      command: \"UNKNOWN\",\n      args: [],\n      sender: $json.body.From,\n      error: \"Empty message received.\",\n      valid: false\n    }\n  }];\n}\n\nconst parts = input.split(/\\s+/);  // split by any whitespace\nconst command = parts[0].toUpperCase();\nconst args = parts.slice(1);\n\n// Basic validation for required args\nlet valid = true;\nlet error = \"\";\n\nswitch (command) {\n  case \"LIST\":\n    if (args.length !== 1) {\n      valid = false;\n      error = \"Usage: LIST /FolderName\";\n    }\n    break;\n  case \"DELETE\":\n    if (args.length !== 1) {\n      valid = false;\n      error = \"Usage: DELETE /Folder/file.pdf\";\n    }\n    break;\n  case \"MOVE\":\n    if (args.length !== 2) {\n      valid = false;\n      error = \"Usage: MOVE /Folder/file.pdf /NewFolder\";\n    }\n    break;\n  case \"SUMMARY\":\n    if (args.length !== 1) {\n      valid = false;\n      error = \"Usage: SUMMARY /FileName\";\n    }\n    break;\n  default:\n    valid = false;\n    error = \"Unknown command.\";\n    break;\n}\n\nreturn [{\n  json: {\n    command,\n    args,\n    sender: $json.body.From,\n    valid,\n    error\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        32
+      ],
+      "id": "6c9bcc61-248b-4e94-95fa-a5dba66c120e",
+      "name": "code for spliting input"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "'1SAaPzNgKc_nbT-gSyP1lWk4GAxLZm5P2' in parents",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        864,
+        -304
+      ],
+      "id": "5877b900-0e33-4a84-93ea-2c8b735490a7",
+      "name": "Listing the files",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COVGt86PmhQnNecs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1088,
+        -288
+      ],
+      "id": "079512c2-ce9f-43db-a01a-0b96aef55296",
+      "name": "Merge Files and switch nodes"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $items();\n\n// Get the last item for sender info\nconst senderInfo = items[items.length - 1].json;\nconst sender = senderInfo.sender;\n\n// Exclude the last item (it's not a file)\nconst fileItems = items.slice(0, -1);\n\n// Format the file list\nconst fileList = fileItems.map(item => `📄 ${item.json.name}`).join(\"\\n\");\n\nconst message = `📂 *Files in your folder:*\\n\\n${fileList}`;\n\nreturn [\n  {\n    json: {\n      to: sender,\n      message: message\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1376,
+        -288
+      ],
+      "id": "5b66a005-168f-4da6-9663-c631bb7dfff9",
+      "name": "Code to send file names and sender details"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/AC74f060a547cc72b0683ba2747e8cbead/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{$json[\"to\"]}}"
+            },
+            {
+              "name": "From",
+              "value": "=whatsapp:+14155238886"
+            },
+            {
+              "name": "Body",
+              "value": "=Listing the files {{$json[\"message\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1872,
+        -288
+      ],
+      "id": "d8e89922-21ac-497a-9824-4f673eb1b21e",
+      "name": "send list of files to whatsapp",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "vIG1Wmedjb56n9ca",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{$json[\"args\"][0].split(\"/\").pop()}}\n\n",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        832,
+        -112
+      ],
+      "id": "35613a9c-bb71-43c0-a84c-24c9fefe34d3",
+      "name": "Search files to delete",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COVGt86PmhQnNecs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/AC74f060a547cc72b0683ba2747e8cbead/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{$json[\"sender\"]}}"
+            },
+            {
+              "name": "From",
+              "value": "=whatsapp:+14155238886"
+            },
+            {
+              "name": "Body",
+              "value": "=🗑️ *Deleted File(s):* {{$json[\"args\"][0]}} successfully deleted."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1728,
+        -112
+      ],
+      "id": "eedf8807-e14a-464a-b604-0fea9454e604",
+      "name": "confirming the deletion",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "vIG1Wmedjb56n9ca",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "=name = '{{$json[\"args\"][0]}}' or name = '{{$json[\"args\"][1]}}'\n",
+        "returnAll": true,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        896,
+        48
+      ],
+      "id": "bf8aceab-965e-4d5f-a872-ee23bd3675e4",
+      "name": "Search files and folders to move ",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COVGt86PmhQnNecs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1104,
+        48
+      ],
+      "id": "68c40921-0e19-459c-b4e5-8c6d4f455047",
+      "name": "Merge details to identify file and destination"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $items();\nlet fileId = null;\nlet folderId = null;\nlet sender = null;\n\n// Get args and sender from command item\nconst commandItem = items.find(i => i.json.command === 'MOVE');\nconst fileName = commandItem.json.args[0];\nconst folderName = commandItem.json.args[1];\nsender = commandItem.json.sender;\n\n// Find file and folder IDs from merged items\nfor (const item of items) {\n  if (item.json.name === fileName) {\n    fileId = item.json.id;\n  } else if (item.json.name === folderName) {\n    folderId = item.json.id;\n  }\n}\n\nreturn [\n  {\n    json: {\n      fileId,\n      folderId,\n      sender\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        48
+      ],
+      "id": "7f62f332-44a6-43c4-b885-da1b9d99c32f",
+      "name": "sends needed information to move file"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "name",
+        "joinMode": "keepEverything",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1888,
+        48
+      ],
+      "id": "c6fa76be-526e-4c9e-a274-9f276c254046",
+      "name": "Merge the move file and sender details",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/AC74f060a547cc72b0683ba2747e8cbead/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "From",
+              "value": "whatsapp:+14155238886"
+            },
+            {
+              "name": "To",
+              "value": "={{$json[\"sender\"]}}"
+            },
+            {
+              "name": "Body",
+              "value": "=✅ File *{{$json[\"args\"][0]}}* has been moved to folder *{{$json[\"args\"][1]}}* successfully."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2096,
+        48
+      ],
+      "id": "1b692f41-01bb-4634-9c2f-f9e7d7a17640",
+      "name": "Confirmatn of file moving",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "vIG1Wmedjb56n9ca",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{$json[\"args\"][1].split(\"/\").pop()}}",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        912,
+        240
+      ],
+      "id": "07e3ccf9-64b0-4d40-b788-929f10d8abd5",
+      "name": "Search files to give summary",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COVGt86PmhQnNecs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "Upload File to PDF.co",
+        "binaryData": true,
+        "name": "SummaringFile"
+      },
+      "type": "n8n-nodes-pdfco.PDFco Api",
+      "typeVersion": 1,
+      "position": [
+        1408,
+        240
+      ],
+      "id": "ef015372-31ee-4cc5-a8ae-c1bc37215090",
+      "name": "Upload file to PDFco ",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pdfcoApi": {
+          "id": "k0vvGnzP3KZOM86W",
+          "name": "PDF.co account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "Convert from PDF",
+        "url": "={{ $json.url }}",
+        "advancedOptions": {}
+      },
+      "type": "n8n-nodes-pdfco.PDFco Api",
+      "typeVersion": 1,
+      "position": [
+        1664,
+        240
+      ],
+      "id": "6c592ab4-311b-45cc-bd06-dd6b2b47e80b",
+      "name": "convert PDF to Text",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pdfcoApi": {
+          "id": "k0vvGnzP3KZOM86W",
+          "name": "PDF.co account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1888,
+        240
+      ],
+      "id": "5a867c45-a59e-4ef1-824b-f8f8a217ca03",
+      "name": "to get the text in URL"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/AC74f060a547cc72b0683ba2747e8cbead/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{$json[\"sender\"]}}"
+            },
+            {
+              "name": "From",
+              "value": "=whatsapp:+14155238886"
+            },
+            {
+              "name": "Body",
+              "value": "\"Unrecognized command.✅ '\\\\n  Try one of the following:\\\\n• LIST /FolderName\\\\n• DELETE /Folder/file.pdf• MOVE /Folder/file.pdf /NewFolder• SUMMARY /FileName\""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        816,
+        448
+      ],
+      "id": "27be47d9-cd33-4862-beba-fe93acfcd3f5",
+      "name": "Sending the commands",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "vIG1Wmedjb56n9ca",
+          "name": "Unnamed credential"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "bhanuprakash2407.app.n8n.cloud",
+            "user-agent": "TwilioProxy/1.1",
+            "content-length": "567",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "50.19.198.176",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "US",
+            "cf-ray": "96b3ee0034ad38fb-IAD",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/x-www-form-urlencoded",
+            "i-twilio-idempotency-token": "809de1c4-2ad9-4ba4-8fba-0cee755d38db",
+            "x-forwarded-for": "50.19.198.176, 172.70.38.30",
+            "x-forwarded-host": "bhanuprakash2407.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-1-8749c5b8f-xc8wf",
+            "x-home-region": "us1",
+            "x-is-trusted": "yes",
+            "x-real-ip": "50.19.198.176",
+            "x-twilio-signature": "KBBLMeKdFZa1IWXCBps+DJwD7ZQ="
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "SmsMessageSid": "SM46c444b1490be03cca37cf3517d0d82a",
+            "NumMedia": "0",
+            "ProfileName": "Bhanu Prakash",
+            "MessageType": "LIST",
+            "SmsSid": "SM46c444b1490be03cca37cf3517d0d82a",
+            "WaId": "918317659791",
+            "SmsStatus": "received",
+            "Body": "LIST",
+            "To": "whatsapp:+14155238886",
+            "NumSegments": "1",
+            "ReferralNumMedia": "0",
+            "MessageSid": "SM46c444b1490be03cca37cf3517d0d82a",
+            "AccountSid": "AC74f060a547cc72b0683ba2747e8cbead",
+            "ChannelMetadata": "{\"type\":\"whatsapp\",\"data\":{\"context\":{\"ProfileName\":\"Bhanu Prakash\",\"WaId\":\"918317659791\"}}}",
+            "From": "whatsapp:+918317659791",
+            "ApiVersion": "2010-04-01"
+          },
+          "webhookUrl": "https://bhanuprakash2407.app.n8n.cloud/webhook-test/whatsapp",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "code for spliting input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Listing the files",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Files and switch nodes",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Search files to delete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search files and folders to move ",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge details to identify file and destination",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge the move file and sender details",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Search files to give summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sending the commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a file": {
+      "main": [
+        [
+          {
+            "node": "confirming the deletion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file": {
+      "main": [
+        [
+          {
+            "node": "Merge the move file and sender details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Upload file to PDFco ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "code for spliting input": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listing the files": {
+      "main": [
+        [
+          {
+            "node": "Merge Files and switch nodes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Files and switch nodes": {
+      "main": [
+        [
+          {
+            "node": "Code to send file names and sender details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code to send file names and sender details": {
+      "main": [
+        [
+          {
+            "node": "send list of files to whatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files to delete": {
+      "main": [
+        [
+          {
+            "node": "Delete a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders to move ": {
+      "main": [
+        [
+          {
+            "node": "Merge details to identify file and destination",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge details to identify file and destination": {
+      "main": [
+        [
+          {
+            "node": "sends needed information to move file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sends needed information to move file": {
+      "main": [
+        [
+          {
+            "node": "Move file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge the move file and sender details": {
+      "main": [
+        [
+          {
+            "node": "Confirmatn of file moving",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files to give summary": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file to PDFco ": {
+      "main": [
+        [
+          {
+            "node": "convert PDF to Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convert PDF to Text": {
+      "main": [
+        [
+          {
+            "node": "to get the text in URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "to get the text in URL": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "490c5f59-5dd7-427b-a50c-46f669778082",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b2141d2703d1468d165e2482a7a72806dc91fbb8de7b4570c3d38e23085b02a7"
+  },
+  "id": "vTNWQtwNxVsM6T6y",
+  "tags": []
+}
